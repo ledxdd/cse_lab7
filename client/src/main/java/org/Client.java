@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class Client {
     public static void main(String[] args) {
-        String serverIP = "localhost";
+        String serverIP = "77.234.196.15";
         System.out.println("Клиент запущен.");
 
         try (DatagramSocket clientSocket = new DatagramSocket(); Scanner scanner = new Scanner(System.in)) {
@@ -19,7 +19,7 @@ public class Client {
 
                 byte[] sendData = message.getBytes(StandardCharsets.UTF_8);
 
-                DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, serverAddress, 42182);
+                DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, serverAddress, 54533);
 
                 clientSocket.send(sendPacket);
             }
