@@ -26,7 +26,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.Server</mainClass>
+                            <mainClass>org.example.UdpServer</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
