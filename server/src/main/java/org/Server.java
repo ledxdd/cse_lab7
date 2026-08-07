@@ -2,27 +2,34 @@ package org;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.SocketException;
-import java.nio.ByteBuffer;
+import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 
 public class Server {
-    public static void main(String[] args) throws SocketException {
-        System.out.println("Сервер запускается");
+    public static void main(String[] args) {
+        int port = 54533;
+        System.out.println("Сервер запускается...");
 
-        try (DatagramSocket serverSocket = new DatagramSocket(54533)) {
-            System.out.println("Сервер слушает порт: 42182");
-
-            byte[] recieveBuffer = new byte[1024];
+        // Привязываем сокет ко всем сетевым интерфейсам (0.0.0.0)
+        try (DatagramSocket serverSocket = new DatagramSocket(new InetSocketAddress("0.0.0.0", port))) {
+            System.out.println("Сервер успешно запущен и слушает порт: " + port);
 
             while (true) {
-                DatagramPacket recievePacket = new DatagramPacket(recieveBuffer, recieveBuffer.length);
+                // Создаем новый буфер на каждое сообщение
+                byte[] receiveBuffer = new byte[1024];
+                DatagramPacket receivePacket = new DatagramPacket(receiveBuffer, receiveBuffer.length);
 
-                serverSocket.receive(recievePacket);
+                // Ожидаем пакет
+                serverSocket.receive(receivePacket);
 
-                String message = new String(recievePacket.getData(), 0, recievePacket.getLength(), StandardCharsets.UTF_8);
+                String message = new String(
+                        receivePacket.getData(),
+                        0,
+                        receivePacket.getLength(),
+                        StandardCharsets.UTF_8
+                );
 
-                System.out.println("[ " + recievePacket.getAddress() + " ]: " + message);
+                System.out.println("[" + receivePacket.getSocketAddress() + "]: " + message);
             }
         } catch (Exception e) {
             System.err.println("Ошибка на сервере: " + e.getMessage());

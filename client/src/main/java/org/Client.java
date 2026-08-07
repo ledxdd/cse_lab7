@@ -8,23 +8,29 @@ import java.util.Scanner;
 public class Client {
     public static void main(String[] args) {
         String serverIP = "77.234.196.15";
+        int serverPort = 54533;
+
         System.out.println("Клиент запущен.");
 
-        try (DatagramSocket clientSocket = new DatagramSocket(); Scanner scanner = new Scanner(System.in)) {
+        try (DatagramSocket clientSocket = new DatagramSocket();
+             Scanner scanner = new Scanner(System.in)) {
+
             InetAddress serverAddress = InetAddress.getByName(serverIP);
 
             while (true) {
-                System.out.println("Введите сообщение: ");
+                System.out.print("Введите сообщение: ");
                 String message = scanner.nextLine();
 
-                byte[] sendData = message.getBytes(StandardCharsets.UTF_8);
+                if (message.trim().isEmpty()) continue;
 
-                DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, serverAddress, 54533);
+                byte[] sendData = message.getBytes(StandardCharsets.UTF_8);
+                DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, serverAddress, serverPort);
 
                 clientSocket.send(sendPacket);
+                System.out.println("-> Отправлено " + sendData.length + " байт на " + serverIP + ":" + serverPort);
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 }
